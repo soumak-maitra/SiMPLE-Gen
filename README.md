@@ -36,7 +36,7 @@ A modular, end-to-end pipeline to generate simulated Lyman-α emitters from cosm
   
 ---
 
-## 📦 Repository Structure
+##  Repository Structure
 
 ```
 SiMPLE-Gen/              # root folder (repo name)
@@ -58,7 +58,7 @@ Simulation inputs live outside this repo under `data/raw/`, and outputs are writ
 
 ---
 
-## 🚀 Running the Pipeline
+##  Running the Pipeline
 
 Execute the master script:
 
@@ -70,7 +70,7 @@ This calls each step in sequence: `gen.py`, `spec.py`, `abundance.py`, `assign.p
 
 ---
 
-## 🛠️ Module Descriptions
+##  Module Descriptions
 
 * **`gen.py`**: Extracts 1D neutral-hydrogen, temperature, and velocity sightlines around halos.
 * **`spec.py`**: Computes Lyman-α optical depth τ(z) along each sightline using your Voigt-profile routine.
