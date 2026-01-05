@@ -9,7 +9,7 @@ A modular, end-to-end pipeline to generate simulated Lyman-α emitters from cosm
 
 ---
 
-## ⚙️ Setup
+##  Setup
 
 1. **Clone** the repo:
 
