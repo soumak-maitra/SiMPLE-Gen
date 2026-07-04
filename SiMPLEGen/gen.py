@@ -32,43 +32,47 @@ def run_gen():
 
     # ── Build x & z grids ────────────────────────────────────────
     N = Dbox.shape[0]
+
     # central index
-    i_center = N//2
+    i_center = N // 2
+
     # comoving coordinate [Mpc/h]
-    x_sim = np.linspace(0, BOX_SIZE, N+1)[:-1]
-    # phys cm
+    x_sim = np.linspace(0, BOX_SIZE, N + 1)[:-1]
+
+    # convert h^-1 cMpc -> cMpc with Astropy units
     x = x_sim * u.Mpc / cosmo.h
 
-    # build z-grid via dz = dx * H(z)/c
-    H_z   = cosmo.H(Z_REDSHIFT).to(u.km/u.s/u.Mpc).value
-    dzdx  = H_z / c.to(u.km/u.s).value
+    # build z-grid via dz = dchi / (c / H)
+    H_z = cosmo.H(Z_REDSHIFT)
+    dx_dz = c / H_z
+
     z = np.zeros_like(x_sim)
-    z[0] = Z_REDSHIFT - (x_sim[i_center] - x_sim[0]) * dzdx
-    for i in range(len(z)-1):
-        z[i+1] = z[i] + (x_sim[i+1] - x_sim[i]) * dzdx
+    z[0] = Z_REDSHIFT - (x[i_center] - x[0]) / dx_dz
+
+    for i in range(len(z) - 1):
+        z[i + 1] = z[i] + (x[i + 1] - x[i]) / dx_dz
 
     # ── Compute neutral‐H density sightlines ─────────────────────
     # total H number density n_H = Dbox / (physical cell volume)
-    nHbox  = Dbox / (u.m.to(u.cm)/(1+Z_REDSHIFT))**3
+    nHbox  = Dbox / (u.m.to(u.cm) / (1 + Z_REDSHIFT))**3
     nHIbox = nHbox * (1 - Xbox)   # neutral fraction
 
     # grid‐index of each halo
-    halo_idx = (halo_cm * (N-1)/BOX_SIZE).astype(int)
+    halo_idx = (halo_cm * (N - 1) / BOX_SIZE).astype(int)
 
     # extract LOS at each halo (along x-axis)
-    n_HI_halo  = nHIbox[:, halo_idx[:,1], halo_idx[:,2]].T
-    T_halo     = Tbox[:,   halo_idx[:,1], halo_idx[:,2]].T
-    v_pec_halo = Vbox[:,   halo_idx[:,1], halo_idx[:,2]].T
+    n_HI_halo  = nHIbox[:, halo_idx[:, 1], halo_idx[:, 2]].T
+    T_halo     = Tbox[:,   halo_idx[:, 1], halo_idx[:, 2]].T
+    v_pec_halo = Vbox[:,   halo_idx[:, 1], halo_idx[:, 2]].T
 
     # roll so each halo’s x-coordinate is at center
-    # roll so each halo’s x-coordinate is at center
     shifts = i_center - halo_idx[:, 0]
-    
+
     def roll_rows(arr, shifts):
         n_col = arr.shape[1]
         cols = (np.arange(n_col)[None, :] - shifts[:, None]) % n_col
         return np.take_along_axis(arr, cols, axis=1)
-    
+
     n_HI_halo  = roll_rows(n_HI_halo,  shifts)
     T_halo     = roll_rows(T_halo,     shifts)
     v_pec_halo = roll_rows(v_pec_halo, shifts)
@@ -92,4 +96,3 @@ def run_gen():
 
 if __name__ == "__main__":
     run_gen()
-
