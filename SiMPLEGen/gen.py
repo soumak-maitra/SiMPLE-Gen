@@ -61,10 +61,17 @@ def run_gen():
     v_pec_halo = Vbox[:,   halo_idx[:,1], halo_idx[:,2]].T
 
     # roll so each halo’s x-coordinate is at center
-    shifts = i_center - halo_idx[:,0]
-    n_HI_halo  = np.roll(n_HI_halo,  shifts, axis=1)
-    T_halo     = np.roll(T_halo,     shifts, axis=1)
-    v_pec_halo = np.roll(v_pec_halo, shifts, axis=1)
+    # roll so each halo’s x-coordinate is at center
+    shifts = i_center - halo_idx[:, 0]
+    
+    def roll_rows(arr, shifts):
+        n_col = arr.shape[1]
+        cols = (np.arange(n_col)[None, :] - shifts[:, None]) % n_col
+        return np.take_along_axis(arr, cols, axis=1)
+    
+    n_HI_halo  = roll_rows(n_HI_halo,  shifts)
+    T_halo     = roll_rows(T_halo,     shifts)
+    v_pec_halo = roll_rows(v_pec_halo, shifts)
 
     # ── Save for next step ───────────────────────────────────────
     np.save(PATHS["n_HI_halo"],  n_HI_halo)
