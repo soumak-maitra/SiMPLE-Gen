@@ -53,7 +53,7 @@ def run_abundance():
     cumulative_uv = np.cumsum(phi_uv[::-1])[::-1] * dMuv
 
     # ── Step 3: Duty Cycle Correction ────────────────────────────────────
-    # time interval ~ 200 Myr → Δz ≈ 0.39 at z≈7
+    # time interval ~ 50 Myr → delta_z ~ 0.39 at z~7
     deltaz = 0.39
     mf_prev = MassFunction(
         hmf_model="SMT",
