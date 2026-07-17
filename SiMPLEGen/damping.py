@@ -24,8 +24,8 @@ def run_damping():
     z = Z_REDSHIFT
 
     # ── Compute circular velocity for each halo [km/s] ─────────────
-    # v_c = 142.85 * [0.3*(1+z)^3 + 0.7]^(1/3) * (M_h/1e12)^(1/3)
-    v_c = 142.85 * (0.3 * (1 + z)**3 + 0.7)**(1/3) * (halomass / 1e12)**(1/3)
+    # v_c = 142.85 * [0.3*(1+z)^3 + 0.7]^(1/6) * (M_h/1e12)^(1/3)
+    v_c = 142.85 * (0.3 * (1 + z)**3 + 0.7)**(1/6) * (halomass / 1e12)**(1/3)
 
     # ── Build velocity grid [km/s] ─────────────────────────────────
     # must match the binning of tau (originally [-500,500] in steps of 2)
